@@ -1,19 +1,44 @@
-import platform    # For getting the operating system name
-import subprocess  # For executing a shell command
+import argparse
+import os
+import socket
 
-def ping(host):
-    """
-    Returns True if host responds to a ping request
-    """
-    import subprocess, platform
+def scanIP(uIP):
+    response = os.popen(f"ping {uIP}").read()
+    if "ttl=" in response.lower():
+        print(f"UP {uIP} Ping Successful, Host is UP!")
+    else:
+        print(f"DOWN {uIP} Ping Unsuccessful, Host is DOWN.") 
 
-    # Ping parameters as function of OS
-    ping_str = "-n 1" if  platform.system().lower()=="windows" else "-c 1"
-    args = "ping " + " " + ping_str + " " + host
-    need_sh = False if  platform.system().lower()=="windows" else True
+def scanPorts(uPort, uIP):
+    response = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    response.settimeout(1)
+    result = response.connect_ex((uIP, uPort))
+    response.close()
 
-    # Ping
-    return subprocess.call(args, shell=need_sh) == 0
+    if result == 0:
+        print(f"Port {uPort} is OPEN on {uIP}")
+    else:
+        print(f"Port {uPort} is CLOSED on {uIP}")
 
-# test call
-print(ping("192.168.17.142"))
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='This script will identify accessible IPs and Ports'
+    )
+    parser.add_argument('-ip', help ='Use an IP to scan', type =str)
+    parser.add_argument('-p', help ='Use a Port to scan', type =int)
+    args = parser.parse_args()
+    uIP = args.ip
+    uPort = args.p
+    
+    if uIP:
+        scanIP(uIP)
+    else:
+        print(f"Please input an IP")
+
+    if uPort and uIP:
+        scanPorts(uPort, uIP)
+
+if __name__ == "__main__":
+    main()
