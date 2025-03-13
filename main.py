@@ -5,11 +5,16 @@ import re
 from colorama import Fore
 import concurrent.futures
 import threading
+import ipaddress
+
 
 #Check if the provided IP is valid
 def isValidIP(uIP):
-    regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
-    return re.match(regex, uIP) is not None
+    try:
+        ipaddress.ip_network(uIP, strict=False)
+        return True
+    except ValueError:
+        return False
 
 #Scan the valid IP
 def scanIP(uIP):
@@ -19,6 +24,14 @@ def scanIP(uIP):
     else:
         print(f"{uIP} Ping Unsuccessful, Host is DOWN.") 
 
+#Scan the IP list
+def scanIPList(ip_list):
+    for ip in ip_list:
+        response = os.popen(f"ping {ip} -n 1 -w 1000").read()
+        if "ttl=" in response.lower():
+            print(f"{ip} Ping Successful, Host is UP!")
+        else:
+            print(f"{ip} Ping Unsuccessful, Host is DOWN.") 
 
 #Scan the valid port on the valid IP
 def scanPorts(uPort, uIP):
@@ -52,9 +65,11 @@ def main():
     )
     parser.add_argument('-ip', help ='Use an IP to scan', type =str)
     parser.add_argument('-p', help ='Use a Port or list of Ports to scan separated by comma', type =str)
+    
     args = parser.parse_args()
     uIP = args.ip
     inPort = args.p
+    
 
     #Conver input Ports (comma separated str) into a list of integers
     uPort = []
@@ -65,7 +80,7 @@ def main():
                 start, end = map(int, part.split("-"))
                 try:
 
-                    if start > end or start < 1 or 65535 < end:
+                    if start > end or start < 1 or end > 65535:
                         print(f"Please input a valid port number (1-65535) since the given range is not acceptable")
                         return
                     uPort.extend(range(start, end + 1))
@@ -84,13 +99,19 @@ def main():
                     print(f"Invalid port format {part}. Use numbers or ranges")
                     return
     
+    ip_list=[str(ip) for ip in ipaddress.IPv4Network(uIP, strict=False)]
+    
     #check if there is an IP provided
-    if not uIP or not isValidIP(uIP):
+    if not uIP or not isValidIP(uIP) or not ip_list:
         print(f"Please input a valid IP Address.")
         return
     
-    if uIP:
+    if "/" not in uIP: 
         scanIP(uIP)
+
+    if "/" in uIP and ip_list:
+        scanIPList(ip_list)
+        
 
     #Check if there is a port provided
     if uPort and uIP:
@@ -101,6 +122,8 @@ def main():
         scanPorts(uPort, uIP)
     else:
         print(f"No port provided for this scan")
+
+
 
 if __name__ == "__main__":
     main()
