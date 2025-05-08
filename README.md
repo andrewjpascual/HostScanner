@@ -20,8 +20,6 @@ Instructions to set up this project in your local environment are listed down be
 
 ### Prerequisites
 
-* Go v1.18
-
 * Git
   ```
   https://git-scm.com/
