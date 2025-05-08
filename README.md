@@ -13,3 +13,52 @@ HostScanner is a simple and efficient Python-based tool for scanning ports and C
 ![CIDR scan](https://github.com/user-attachments/assets/5e98efba-f40f-4151-b5ff-e3f81d3bad40)
 
 I decided to build this project with Python due to it's simplicity and cross-platform compatability. There is also multiple libraries and community support which made troubleshooting and extending functionality much easier.
+
+##Getting Started
+
+Instructions to set up this project in your local environment are listed down below
+
+### Prerequisites
+
+* Go v1.18
+
+* Git
+  ```
+  https://git-scm.com/
+  ```
+
+  ## Installation
+
+   Get the repository with
+   ```sh
+   git clone https://github.com/andrewjpascual/HostScanner.git
+   ```
+
+## Options
+### `-ip [IP Address]`
+Target IP Address/es whose Ports need to be scanned. It can parse single IP Address for Port Scanning as well as CIDR which can be used for Host Discovery.
+
+For example:
+```
+-ip 192.168.1.1
+```
+
+CIDR example:
+```
+-ip 192.168.1.1/30
+```
+
+### `-p [Port Numbers]` `--port [Port Numbers]`
+Specifies the ports to be scanned to get their status. Port Numbers are required for Port Scanning and will not be considered during Host Discovery.
+
+For example:
+```
+-p 80,443,21
+```
+
+Port Range example:
+### **Scan for a range of open ports on a single host**
+It will scan for open ports from 1-9000 and also label the common ports.
+```
+python main.py --ip 192.168.1.1 -p 1-100
+```
