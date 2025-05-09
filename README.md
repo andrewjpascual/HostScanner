@@ -14,7 +14,7 @@ HostScanner is a simple and efficient Python-based tool for scanning ports and C
 
 I decided to build this project with Python due to it's simplicity and cross-platform compatability. There is also multiple libraries and community support which made troubleshooting and extending functionality much easier.
 
-##Getting Started
+## Getting Started
 
 Instructions to set up this project in your local environment are listed down below
 
