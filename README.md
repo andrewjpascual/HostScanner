@@ -1,5 +1,5 @@
 # HostScanner
-This will identify live hosts and ports
+This will identify live IPs, ports, and port ranges
 
 
 ## About the Project
