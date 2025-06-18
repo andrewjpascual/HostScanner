@@ -47,7 +47,7 @@ CIDR example:
 ```
 
 ### `-p [Port Numbers]` `--port [Port Numbers]`
-Specifies the ports to be scanned to get their status. Port Numbers are required for Port Scanning and will not be considered during Host Discovery.
+Specifies the ports to be scanned to get their status. Port Numbers are required for Port Scanning and will not be considered during Host Discovery process.
 
 For example:
 ```
